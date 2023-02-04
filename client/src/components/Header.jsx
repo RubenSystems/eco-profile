@@ -12,7 +12,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle.js";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft.js";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
-import {mainListItems, SecondaryListItems} from "./Sidebar.jsx";
+import {mainListItems} from "./Sidebar.jsx";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 
@@ -126,7 +126,6 @@ export default function Header({ title, toggleClose }) {
                 <List component="nav">
                     {mainListItems}
                     <Divider sx={{ my: 1 }} />
-                    <SecondaryListItems />
                 </List>
             </Drawer>
         </React.Fragment>
