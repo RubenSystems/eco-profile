@@ -1,33 +1,27 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
-
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
+import HomeDashboard from './pages/HomeDashboard'
+import ClusterDashboard from './pages/ClusterDashboard'
+import HostDashboard from './pages/HostDashboard'
+import Header from '../src/components/Header'
+import Box from "@mui/material/Box"
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+    <Router>
+        <Box sx={{display: 'flex'}}>
+        <Header/>
+        <Routes>
+        <Route index element={<HomeDashboard />}/>
+        
+          <Route path="cluster">
+            <Route path=":clusterId" element={<ClusterDashboard />}/>
+          </Route>
+          <Route path="host">
+            <Route path=":clusterId/:hostId" element={<HostDashboard />}/>
+          </Route>
+          </Routes>
+          </Box>
+      </Router>
   )
 }
 
