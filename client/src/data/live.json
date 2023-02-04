@@ -1,0 +1,47 @@
+[ 
+  {
+    "_id": {
+      "$oid": "63ded50dd9e0b0371307f0ae"
+    },
+    "timestamp": "2023-02-04T20:18:56",
+    "username": "AI Infra Start Up",
+    "clusterId": "2",
+    "hostId": "4",
+    "powerUsage": 160.24,
+    "cpuLoad": 100
+  },
+  {
+    "_id": {
+      "$oid": "63ded9002a28b1ea624efe15"
+    },
+    "timestamp": "2023-02-04T21:18:57",
+    "username": "AI Infra Start Up",
+    "clusterId": "2",
+    "hostId": "4",
+    "powerUsage": 80.12,
+    "cpuLoad": 50
+  },
+  {
+    "_id": {
+      "$oid": "63ded50dd9e0b0371307f0ae"
+    },
+    "timestamp": "2023-02-04T20:18:58",
+    "username": "AI Infra Start Up",
+    "clusterId": "2",
+    "hostId": "4",
+    "powerUsage": 165.24,
+    "cpuLoad": 100
+  },
+  {
+    "_id": {
+      "$oid": "63ded9002a28b1ea624efe15"
+    },
+    "timestamp": "2023-02-04T21:18:59",
+    "username": "AI Infra Start Up",
+    "clusterId": "2",
+    "hostId": "4",
+    "powerUsage": 80.12,
+    "cpuLoad": 50
+  }
+
+]
