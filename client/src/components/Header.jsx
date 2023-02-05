@@ -125,8 +125,8 @@ export default function Header({ title, toggleClose }) {
                 <Divider />
                 <List component="nav">
                     {mainListItems}
-                    <Divider sx={{ my: 1 }} />
-                    <SecondaryListItems />
+                    {/*<Divider sx={{ my: 1 }} />*/}
+                    {/*<SecondaryListItems />*/}
                 </List>
             </Drawer>
         </React.Fragment>
