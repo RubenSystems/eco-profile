@@ -31,7 +31,7 @@ def upload_data(dataset, username, hostname, cluster_id):
 		re.post(ENDPOINT_URL, json=json_data)
 		print(json_data)
 
-		time.sleep(0.5)
+		time.sleep(0.2)
 
 def get_info():
 	username = 		input("username: ")

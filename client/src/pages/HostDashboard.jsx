@@ -19,7 +19,7 @@ const HostDashboard = () => {
   const data = {
     uptime: 25,
     hostname: "Prestance",
-    cpuLoad: 160.5,
+    cpuLoad: 60.5,
     esgRating: 99,
     totalEnergy: 3000
   }
