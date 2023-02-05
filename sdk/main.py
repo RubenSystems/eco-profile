@@ -50,6 +50,14 @@ def upload_data(dataset, username, hostname, cluster_id):
 # "datasets/AEP_hourly.csv"
 filename = "dataset.csv"
 
+def get_info():
+	unmae = input("Username: ")
+	hname = input("Hostname: ")
+	cid = input("Cluster ID: ")
+
+	return unmae, hname, cid
+
+
 if args.username is None or args.hostname is None or args.cluster_id is None: 
 	username, hostname, cid = get_info()
 else:
@@ -59,6 +67,7 @@ print(username, hostname, cid)
 ds = load_data(filename)
 
 upload_data = upload_data(ds, username, hostname, cid)
+
 
 
 

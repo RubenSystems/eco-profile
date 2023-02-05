@@ -164,7 +164,7 @@ model.compile(
 model.fit(
     x,
     y,
-    epochs=4,
+    epochs=3,
     batch_size=64,
 )
 
@@ -193,3 +193,6 @@ plt.rcParams["figure.figsize"] = (25,10)
 
 
 plt.show()
+
+
+

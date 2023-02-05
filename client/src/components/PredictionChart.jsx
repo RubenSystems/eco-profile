@@ -30,7 +30,7 @@ const PredictionChart = ({b, a}) => {
 
           <Legend />
             <Line type={'monotone'} dataKey="powerUsage" data={b} name="data"  stroke='blue'/>
-          <Line type={'monotone'} dataKey="powerUsage" data={a} name="prediction" stroke='red' />
+            <Line type={'monotone'} dataKey="powerUsage" data={a} name="prediction" stroke='red' />
         </LineChart>
       </ResponsiveContainer>
     </Wrapper>
