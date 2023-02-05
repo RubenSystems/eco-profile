@@ -178,7 +178,7 @@ async def getClusters(clusterId: str, username: Union[str, None] = Header(defaul
     ]
 
     result = await metricsCollection.aggregate(pipeline).to_list(length=None)
-    result['data'][]
+    # result['data'] = result['data'][-100:]
     return list(map(transform, result))
 
 
