@@ -4,7 +4,7 @@ import requests as re
 import time
 import random
 
-ENDPOINT_URL = "https:///sdlkfjsdlfdslfjsldk/.com"
+ENDPOINT_URL = "http://localhost:8000/metrics"
 
 
 def load_data(filename: str): 
@@ -30,7 +30,7 @@ def upload_data(dataset, username, hostname, cluster_id):
 			"clusterId": cluster_id
 		}
 
-		# re.post(ENDPOINT_URL, json=json_data)
+		re.post(ENDPOINT_URL, json=json_data)
 		print(json_data)
 
 		time.sleep(0.5)
