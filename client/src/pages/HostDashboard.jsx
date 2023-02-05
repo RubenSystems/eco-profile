@@ -27,11 +27,11 @@ const HostDashboard = () => {
 
   React.useEffect(() => {
     (async () => {
-       const response = await axios.get(`http://localhost:8000/cluster/${clusterId}/host/${hostId}`)
+       const response = await axios.get(`http://localhost:8000/cluster/${clusterId}/host/${hostId}/`)
       setData(response.data)
 
         setInterval(async () => {
-            const response = await axios.get(`http://localhost:8000/cluster/${clusterId}/host/${hostId}/live`)
+            const response = await axios.get(`http://localhost:8000/cluster/${clusterId}/host/${hostId}/live/`)
             setLiveData(response.data)
         }, 2000)
     })()
@@ -77,7 +77,7 @@ const HostDashboard = () => {
             }/>
             </Row>
             <Row>
-            <TotalEnergy totalEnergy={data.totalPowerUsage}/>
+            <TotalEnergy totalEnergy={Math.round(data.totalPowerUsage)}/>
             <CPULoadCard cpuLoad={data.currentCpuLoad}/>
             </Row>
           </InnerGrid>

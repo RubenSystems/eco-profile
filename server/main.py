@@ -24,7 +24,8 @@ class Metric(BaseModel):
 app = FastAPI()
 
 origins = [
-    "*"
+    "*",
+    "http://localhost:5174"
 ]
 
 app.add_middleware(
@@ -40,6 +41,7 @@ client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://localhost:27017')
 db = client['ecoprofiler']
 metricsCollection = db['metrics']
 
+mins = 60 * 9
 
 def transform(e):
     if '_id' in e:
@@ -58,7 +60,7 @@ def transform(e):
 async def root(username: Union[str, None] = Header(default=None)):
     now = datetime.now()
     now.replace(tzinfo=None)
-    ago = now - timedelta(minutes=30)
+    ago = now - timedelta(minutes=mins)
     # print(ago.isoformat())
 
     pipeline = [
@@ -126,7 +128,7 @@ async def root(username: Union[str, None] = Header(default=None)):
 async def getClusters(clusterId: str, username: Union[str, None] = Header(default=None)):
     now = datetime.now()
     now.replace(tzinfo=None)
-    ago = now - timedelta(minutes=30)
+    ago = now - timedelta(minutes=mins)
     # print(ago.isoformat())
 
     pipeline = [
@@ -240,12 +242,12 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
 async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Header(default=None)):
     now = datetime.now()
     now.replace(tzinfo=None)
-    ago = now - timedelta(minutes=30)
+    ago = now - timedelta(minutes=mins)
 
     pipeline = [
         {
             "$match": {
-                "username": username or "scale ali",
+                "username": username or "scale ai",
                 "clusterId": clusterId,
                 "hostId": hostId,
                 "timestamp": {
@@ -311,10 +313,10 @@ async def postMetrics(metric: Metric):
         updateData = {
             '$set': {
                 # TODO: - ASK WHY ADD!!!!!
-                # 'powerUsage': result['powerUsage'] + metric.powerUsage,
-                # 'cpuLoad': result['cpuLoad'] + metric.cpuLoad
-                'powerUsage': metric.powerUsage,
-                'cpuLoad': metric.cpuLoad
+                'powerUsage': result['powerUsage'] + metric.powerUsage,
+                'cpuLoad': result['cpuLoad'] + metric.cpuLoad
+                # 'powerUsage': metric.powerUsage,
+                # 'cpuLoad': metric.cpuLoad
             }
         }
 
@@ -326,5 +328,4 @@ async def postMetrics(metric: Metric):
     # print(metric.dict())
     result = await metricsCollection.insert_one(metric.dict())
     return {"insertedId": str(result.inserted_id)}
-
 

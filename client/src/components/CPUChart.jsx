@@ -1,12 +1,16 @@
 import React from 'react'
 import styled from 'styled-components'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import moment from "moment";
 const CPUChart = ({chartData}) => {
     console.log("CPU CHART", chartData)
   return (
     <Wrapper>
         <ResponsiveContainer width="100%" height="100%">
-            <LineChart width={500} height={300} data={chartData}>
+            <LineChart width={500} height={300} data={chartData.map(e => { return {
+                ...e,
+                timestamp: moment(e.timestamp).format('HH:mm')
+            }})}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="timestamp" />
                 <YAxis />

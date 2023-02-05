@@ -4,7 +4,7 @@ const TotalEnergy = ({totalEnergy}) => {
   return (
     <Wrapper>
         <h4>Total Power used</h4>
-        <h2>{totalEnergy}Watts</h2>
+        <h2>{totalEnergy} Watts</h2>
     </Wrapper>
   )
 }
