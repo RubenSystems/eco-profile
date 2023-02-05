@@ -1,13 +1,46 @@
 import React from 'react'
 import styled from 'styled-components'
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import { Typography } from '@mui/material';
 const CPULoadCard = ({ cpuLoad }) => {
   return (
     <Wrapper>
-        <h4>Current Cpu load</h4>
-        <h2>{cpuLoad}</h2>
+        <h4>CPU Load</h4>
+        <InnerWrapper>
+        <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+        <CircularProgress variant="determinate" value={cpuLoad} size="60px" />
+        <Box
+        sx={{
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          position: 'absolute',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Typography
+          variant="caption"
+          component="div"
+          color="text.secondary"
+ sx={{fontSize: "18px"}}       >{`${cpuLoad}%`}</Typography>
+      </Box>
+        </Box>
+        </InnerWrapper>
     </Wrapper>
   )
 }
+
+const InnerWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+`
 
 const Wrapper = styled.div`
     background-color: white;
