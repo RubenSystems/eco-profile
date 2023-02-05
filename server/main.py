@@ -67,9 +67,9 @@ async def root(username: Union[str, None] = Header(default=None)):
         {
             "$match": {
                 "username": username or "scale ai",
-                "timestamp": {
-                    "$gt": ago.isoformat()
-                }
+                # "timestamp": {
+                #     "$gt": ago.isoformat()
+                # }
             }
         },
         {
@@ -119,7 +119,7 @@ async def root(username: Union[str, None] = Header(default=None)):
             m[d['timestamp']]['powerUsage'] += d['powerUsage']
             m[d['timestamp']]['cpuLoad'] += d['cpuLoad']
 
-        result[cluster_idx]['data'] = list(m.values())
+        result[cluster_idx]['data'] = list(m.values())[-50:]
 
     return list(map(transform, result))
 
@@ -129,16 +129,15 @@ async def getClusters(clusterId: str, username: Union[str, None] = Header(defaul
     now = datetime.now()
     now.replace(tzinfo=None)
     ago = now - timedelta(minutes=mins)
-    # print(ago.isoformat())
 
     pipeline = [
         {
             "$match": {
                 "username": username or "scale ai",
                 "clusterId": clusterId,
-                "timestamp": {
-                    "$gt": ago.isoformat()
-                }
+                # "timestamp": {
+                #     "$gt": ago.isoformat()
+                # }
             }
         },
         {
@@ -179,6 +178,7 @@ async def getClusters(clusterId: str, username: Union[str, None] = Header(defaul
     ]
 
     result = await metricsCollection.aggregate(pipeline).to_list(length=None)
+    result['data'][]
     return list(map(transform, result))
 
 
@@ -250,9 +250,9 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
                 "username": username or "scale ai",
                 "clusterId": clusterId,
                 "hostId": hostId,
-                "timestamp": {
-                    "$gt": ago.isoformat()
-                }
+                # "timestamp": {
+                #     "$gt": ago.isoformat()
+                # }
             }
         },
         {

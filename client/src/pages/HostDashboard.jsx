@@ -83,8 +83,8 @@ const HostDashboard = () => {
           </InnerGrid>
         </UpperContainer>
         <LowerContainer>
-          <CPUChart chartData={liveData}/>
-          <CPUChart chartData={liveData}/>
+          <CPUChart chartData={liveData} what={`powerUsage`}/>
+          <CPUChart chartData={liveData} what={`cpuLoad`}/>
           {/* <button onClick={() => setLiveData(liveData.concat({
    
     timestamp: "2023-02-04T21:19:00",

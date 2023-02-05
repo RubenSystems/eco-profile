@@ -40,7 +40,7 @@ const HomeDashboard = () => {
                         <Grid key={e.clusterId} item xs={6}>
                           <Link to={`/cluster/${e.clusterId}`}>
                                <Paper sx={{ height: '100%', pt: 1 }}>
-                              <h2 style={{ marginLeft: '45px'}} >{e.clusterId}</h2>
+                              <h2 style={{ marginLeft: '45px'}} >{e.clusterId} (Cluster)</h2>
                               <LineChart width={500} height={300} data={formatted}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="timestamp" />
