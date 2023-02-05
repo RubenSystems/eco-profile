@@ -241,15 +241,14 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
 
 
     result = await metricsCollection.aggregate(pipeline).to_list(length=None)
+    print(result)
 
     tsm1 = parser.parse(result[-1]["timestamp"])
     time_delta = tsm1 - parser.parse(result[-2]["timestamp"])
 
-    print(time_delta)
 
     data = np.array([x["powerUsage"] for x in result])
-    predictions = predict.predict(data[:200].reshape(1, 200, 1))
-
+    predictions = predict.predict((np.array([x * 1000.0 for x in data[:200]])).reshape(1, 200, 1))
     augmented_data = []
     base_timestamp = tsm1
     for prediction in predictions[0]: 
@@ -260,7 +259,7 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
             "username":result[-1]["username"],
             "clusterId":result[-1]["clusterId"],
             "hostId":result[-1]["hostId"],
-            "powerUsage": float(prediction),
+            "powerUsage": round(float(prediction) / 1000.0, 3),
             "predicted":True
         })
 
@@ -269,7 +268,6 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
     db_data = list(map(transform, result))
 
     db_data += augmented_data
-    print(db_data)
 
     return db_data
 
@@ -295,8 +293,11 @@ async def postMetrics(metric: Metric):
     if result:
         updateData = {
             '$set': {
-                'powerUsage': result['powerUsage'] + metric.powerUsage,
-                'cpuLoad': result['cpuLoad'] + metric.cpuLoad
+                # TODO: - ASK WHY ADD!!!!!
+                # 'powerUsage': result['powerUsage'] + metric.powerUsage,
+                # 'cpuLoad': result['cpuLoad'] + metric.cpuLoad
+                'powerUsage': metric.powerUsage,
+                'cpuLoad': metric.cpuLoad
             }
         }
 
