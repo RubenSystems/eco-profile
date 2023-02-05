@@ -8,7 +8,6 @@ from fastapi import FastAPI, Header
 from pydantic import BaseModel
 import motor.motor_asyncio
 from fastapi.middleware.cors import CORSMiddleware
-import random
 from machine_learning import model_loader
 
 import numpy as np
@@ -238,7 +237,7 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
     }
 
 def pad_data(data_point):
-    return data_point + random.randint(-2, 2)
+    return data_point
 
 
 @app.get("/cluster/{clusterId}/host/{hostId}/live")
