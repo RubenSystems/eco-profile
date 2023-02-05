@@ -6,7 +6,6 @@ import random
 
 ENDPOINT_URL = "http://localhost:8000/metrics"
 
-
 def load_data(filename: str): 
 	dataset = pd.read_csv(filename)
 
