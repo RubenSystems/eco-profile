@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 const CPUChart = ({chartData}) => {
+    console.log("CPU CHART", chartData)
   return (
     <Wrapper>
         <ResponsiveContainer width="100%" height="100%">

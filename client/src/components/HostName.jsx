@@ -1,14 +1,14 @@
 import React from 'react'
 import styled from "styled-components"
 
-const HostName = () => {
+const HostName = ({hostname}) => {
   return (
     <Wrapper>
         <h4>
             Host Name
         </h4>
 
-        <h2>SomeHostname</h2>
+        <h2>{hostname}</h2>
     </Wrapper>
   )
 }

@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-const HostUptime = () => {
+const HostUptime = ({uptime}) => {
   return (
     <Wrapper>
         <h4>Host Uptime</h4>
-        <h2>23:30:10</h2>
+        <h2>{uptime}</h2>
         </Wrapper>
   )
 }
