@@ -66,7 +66,7 @@ async def root(username: Union[str, None] = Header(default=None)):
     pipeline = [
         {
             "$match": {
-                "username": username or "scale ai",
+                "username": username or "visco",
                 # "timestamp": {
                 #     "$gt": ago.isoformat()
                 # }
@@ -133,7 +133,7 @@ async def getClusters(clusterId: str, username: Union[str, None] = Header(defaul
     pipeline = [
         {
             "$match": {
-                "username": username or "scale ai",
+                "username": username or "visco",
                 "clusterId": clusterId,
                 # "timestamp": {
                 #     "$gt": ago.isoformat()
@@ -187,7 +187,7 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
     pipeline = [
         {
             "$match": {
-                "username": username or "scale ai",
+                "username": username or "visco",
                 "clusterId": clusterId,
                 "hostId": hostId
             }
@@ -210,7 +210,7 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
     pipeline = [
         {
             "$match": {
-                "username": username or "scale ai",
+                "username": username or "visco",
                 "clusterId": clusterId,
                 "hostId": hostId
             }
@@ -247,7 +247,7 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
     pipeline = [
         {
             "$match": {
-                "username": username or "scale ai",
+                "username": username or "visco",
                 "clusterId": clusterId,
                 "hostId": hostId,
                 # "timestamp": {
@@ -264,14 +264,25 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
 
     result = await metricsCollection.aggregate(pipeline).to_list(length=None)
     db_data = list(map(transform, result))
+    augmented_data = []
 
+
+    if len(db_data) <= 200 and len(db_data) > 0: 
+        pad_val = db_data[0]
+
+        padding = [pad_val] * (240 - len(db_data))
+        padding += db_data 
+        db_data = padding
+
+
+    print(len(db_data))
     if len(db_data) > 200:
         tsm1 = parser.parse(result[-1]["timestamp"])
         time_delta = tsm1 - parser.parse(result[-2]["timestamp"])
 
-        data = np.array([x["powerUsage"] for x in result])
+        data = np.array([x["powerUsage"] for x in db_data])
         predictions = predict.predict((np.array([x * 1000.0 for x in data[:200]])).reshape(1, 200, 1))
-        augmented_data = []
+        
         base_timestamp = tsm1
         for prediction in predictions[0]:
             augmented_data.append({

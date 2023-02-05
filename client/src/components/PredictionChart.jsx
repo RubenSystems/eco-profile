@@ -2,26 +2,23 @@ import React, {useEffect, useState} from 'react'
 import styled from 'styled-components'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import moment from "moment";
-const PredictionChart = ({chartData, what}) => {
-    const [a, setA] = useState([])
-    const [b, setB] = useState([])
+const PredictionChart = ({b, a}) => {
+    // const [a, setA] = useState([])
+    // const [b, setB] = useState([])
 
-    const processData = (arr) => {
-        const data1 = arr.filter((x) => x.predicted)
-        const data2 = arr.filter((x) => !x.predicted)
-        return [data1, data2]
-    }
+    // const processData = (arr) => 
 
 
-    useEffect(() => {
-        const [c, d] = processData(chartData)
-        setA(c)
-        setB(d)
-    }, [])
+    // useEffect(() => {
+    //     const [c, d] = processData(chartData)
+    //     setA(c)
+    //     setB(d)
+    //     console.log(c, d)
+    // }, [])
 
-    const processedData = processData(chartData)
-    console.log("HOIASHDIohSAIODH", processedData)
-
+    // const processedData = processData(chartData)
+    // console.log("HOIASHDIohSAIODH", processedData)
+    console.log(b, a)
   return (
     <Wrapper>
         <ResponsiveContainer width="100%" height="100%">
@@ -30,6 +27,7 @@ const PredictionChart = ({chartData, what}) => {
           <XAxis dataKey="timestamp" allowDuplicatedCategory={false} />
           <YAxis dataKey="powerUsage" />
           <Tooltip />
+
           <Legend />
             <Line type={'monotone'} dataKey="powerUsage" data={b} name="data"  stroke='blue'/>
           <Line type={'monotone'} dataKey="powerUsage" data={a} name="prediction" stroke='red' />

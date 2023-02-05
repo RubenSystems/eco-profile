@@ -85,7 +85,15 @@ const HostDashboard = () => {
           </InnerGrid>
         </UpperContainer>
         <LowerContainer>
-          <PredictionChart chartData={liveData} what={`powerUsage`}/>
+{/*          <PredictionChart a ={ {
+        const data1 = arr.filter((x) => x.predicted)
+        const data2 = arr.filter((x) => !x.predicted)
+        return [data1, data2]
+    } } what={`powerUsage`}/>*/}
+
+                  <PredictionChart a ={ liveData.filter((x) => x.predicted) } 
+                    b ={  liveData.filter((x) => !x.predicted) } what={`powerUsage`}/>
+
           <CPUChart chartData={liveData} what={`cpuLoad`}/>
           {/* <button onClick={() => setLiveData(liveData.concat({
    
