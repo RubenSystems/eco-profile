@@ -3,6 +3,7 @@ from typing import Union
 
 import pymongo
 from dateutil import parser
+
 from fastapi import FastAPI, Header
 from pydantic import BaseModel
 import motor.motor_asyncio
@@ -265,6 +266,7 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
     ]
 
     result = await metricsCollection.aggregate(pipeline).to_list(length=None)
+
     db_data = list(map(transform, result))
     augmented_data = []
 
@@ -301,7 +303,61 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
         
     
 
-    db_data += augmented_data
+        db_data += augmented_data
+
+    db_data = list(map(transform, result))
+
+    return db_data
+
+@app.get("/cluster/{clusterId}/host/{hostId}/predict")
+async def getPredict(clusterId: str, hostId: str, username: Union[str, None] = Header(default=None)):
+    now = datetime.now()
+    now.replace(tzinfo=None)
+    ago = now - timedelta(minutes=mins)
+
+    pipeline = [
+        {
+            "$match": {
+                "username": username or "scale ai",
+                "clusterId": clusterId,
+                "hostId": hostId,
+                "timestamp": {
+                    "$gt": ago.isoformat()
+                }
+            }
+        },
+        {
+            "$sort": {
+                "timestamp": 1
+            }
+        }
+    ]
+
+    result = await metricsCollection.aggregate(pipeline).to_list(length=None)
+    db_data = []
+
+    if len(result) > 200:
+        tsm1 = parser.parse(result[-1]["timestamp"])
+        time_delta = tsm1 - parser.parse(result[-2]["timestamp"])
+
+        data = np.array([x["powerUsage"] for x in result])
+        predictions = predict.predict((np.array([x * 1000.0 for x in data[:200]])).reshape(1, 200, 1))
+        augmented_data = []
+        base_timestamp = tsm1
+        for prediction in predictions[0]:
+            augmented_data.append({
+                "_id":str(result[-1]["_id"]),
+                "timestamp":base_timestamp.isoformat(),
+                "username":result[-1]["username"],
+                "clusterId":result[-1]["clusterId"],
+                "hostId":result[-1]["hostId"],
+                "powerUsage": round(float(prediction) / 1000.0, 3),
+                "predicted":True
+            })
+        
+            base_timestamp += time_delta
+   
+        db_data += augmented_data
 
     return db_data
 
@@ -326,6 +382,13 @@ async def postMetrics(metric: Metric):
     if result:
         updateData = {
             '$set': {
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+                # TODO: - ASK WHY ADD!!!!!
+=======
+>>>>>>> Stashed changes
+>>>>>>> c3fe3e9b77efc160b9f483a492f915057cca1e3b
                 # 'powerUsage': result['powerUsage'] + metric.powerUsage,
                 # 'cpuLoad': result['cpuLoad'] + metric.cpuLoad
                 'powerUsage': metric.powerUsage,
