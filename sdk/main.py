@@ -34,7 +34,6 @@ def upload_data(dataset, username, hostname, cluster_id):
 
 		time.sleep(0.5)
 
-
 def get_info():
 	username = 		input("username: ")
 	hostname = 		input("hostname: ")

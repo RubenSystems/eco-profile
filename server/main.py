@@ -41,7 +41,7 @@ async def root(username: Union[str, None] = Header(default=None)):
     pipeline = [
         {
             "$match": {
-                "username": username or "AI Infra Start Up",
+                "username": username or "ai start up",
                 "timestamp": {
                     "$gt": ago.isoformat()
                 }
@@ -104,7 +104,7 @@ async def getClusters(clusterId: str, username: Union[str, None] = Header(defaul
     pipeline = [
         {
             "$match": {
-                "username": username or "AI Infra Start Up",
+                "username": username or "ai start up",
                 "clusterId": clusterId,
                 "timestamp": {
                     "$gt": ago.isoformat()
@@ -146,7 +146,7 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
     pipeline = [
         {
             "$match": {
-                "username": username or "AI Infra Start Up",
+                "username": username or "ai start up",
                 "clusterId": clusterId,
                 "hostId": hostId
             }
@@ -169,7 +169,7 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
     pipeline = [
         {
             "$match": {
-                "username": username or "AI Infra Start Up",
+                "username": username or "ai start up",
                 "clusterId": clusterId,
                 "hostId": hostId
             }
@@ -202,7 +202,7 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
     pipeline = [
         {
             "$match": {
-                "username": username or "AI Infra Start Up",
+                "username": username or "ai start up",
                 "clusterId": clusterId,
                 "hostId": hostId,
                 "timestamp": {
