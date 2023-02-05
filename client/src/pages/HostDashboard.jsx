@@ -85,7 +85,7 @@ const HostDashboard = () => {
           </InnerGrid>
         </UpperContainer>
         <LowerContainer>
-          <PredictionChart chartData={Cock} what={`powerUsage`}/>
+          <PredictionChart chartData={liveData} what={`powerUsage`}/>
           <CPUChart chartData={liveData} what={`cpuLoad`}/>
           {/* <button onClick={() => setLiveData(liveData.concat({
    

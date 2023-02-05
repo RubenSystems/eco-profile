@@ -3,7 +3,9 @@ import styled from 'styled-components'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import moment from "moment";
 const CPUChart = ({chartData, what}) => {
-    console.log("CPU CHART", chartData)
+    var chartData = chartData.filter(x => {
+        return !x.predicted
+    });
   return (
     <Wrapper>
         <ResponsiveContainer width="100%" height="100%">
