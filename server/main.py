@@ -7,6 +7,7 @@ from pydantic import BaseModel
 import motor.motor_asyncio
 from dateutil import parser
 
+
 class Metric(BaseModel):
     timestamp: str
     username: str
@@ -18,7 +19,6 @@ class Metric(BaseModel):
 
 app = FastAPI()
 
-# app.include_router(machine_learning_router, prefix="/ml_ops",)
 
 client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://localhost:27017')
 db = client['ecoprofiler']
@@ -255,3 +255,5 @@ async def postMetrics(metric: Metric):
     # print(metric.dict())
     result = await metricsCollection.insert_one(metric.dict())
     return {"insertedId": str(result.inserted_id)}
+
+
