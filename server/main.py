@@ -5,7 +5,7 @@ import pymongo
 from fastapi import FastAPI, Header
 from pydantic import BaseModel
 import motor.motor_asyncio
-from dateutil import parser
+from fastapi.middleware.cors import CORSMiddleware
 
 
 class Metric(BaseModel):
@@ -18,6 +18,18 @@ class Metric(BaseModel):
 
 
 app = FastAPI()
+
+origins = [
+    "*"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://localhost:27017')
@@ -35,13 +47,13 @@ def transform(e):
 async def root(username: Union[str, None] = Header(default=None)):
     now = datetime.now()
     now.replace(tzinfo=None)
-    ago = now - timedelta(hours=5)
+    ago = now - timedelta(minutes=30)
     # print(ago.isoformat())
 
     pipeline = [
         {
             "$match": {
-                "username": username or "ai start up",
+                "username": username or "scale ai",
                 "timestamp": {
                     "$gt": ago.isoformat()
                 }
@@ -69,6 +81,11 @@ async def root(username: Union[str, None] = Header(default=None)):
                 "_id": 0,
                 "clusterId": "$_id",
                 "data": 1
+            }
+        },
+        {
+            "$sort": {
+                "clusterId": 1
             }
         }
     ]
@@ -98,7 +115,7 @@ async def root(username: Union[str, None] = Header(default=None)):
 async def getClusters(clusterId: str, username: Union[str, None] = Header(default=None)):
     now = datetime.now()
     now.replace(tzinfo=None)
-    ago = now - timedelta(hours=3)
+    ago = now - timedelta(minutes=30)
     # print(ago.isoformat())
 
     pipeline = [
@@ -197,7 +214,7 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
 async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Header(default=None)):
     now = datetime.now()
     now.replace(tzinfo=None)
-    ago = now - timedelta(hours=3)
+    ago = now - timedelta(minutes=30)
 
     pipeline = [
         {
@@ -229,7 +246,7 @@ async def postMetrics(metric: Metric):
         return dt + (datetime.min - dt) % delta
 
     date = datetime.fromisoformat(metric.timestamp)
-    metric.timestamp = ceil_dt(date, timedelta(seconds=1)).isoformat()
+    metric.timestamp = ceil_dt(date, timedelta(seconds=5)).isoformat()
 
     query = {
         "username": metric.username,

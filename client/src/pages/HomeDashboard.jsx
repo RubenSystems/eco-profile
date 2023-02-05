@@ -1,79 +1,61 @@
-import React from 'react'
+import * as React from 'react'
+import {Container, Grid, Paper} from "@mui/material";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Link } from 'react-router-dom'
-import Live from "../data/live.json"
-import CPUChart from '../components/CPUChart'
-import styled from 'styled-components'
-import ESGCard from '../components/ESGCard'
-import HostName from '../components/HostName'
-import HostUptime from '../components/HostUptime'
-import TotalEnergy from '../components/TotalEnergy'
-import CPULoadCard from '../components/CPULoadCard'
-import TempChart from "../components/TempChart"
-// const getData = async () => {
-//   const response = await axios.get("")
-//   return response.data
-// }
-
-// const {data} = useQuery(["clusters"], clusterData, refetchInterval=1000)
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import {useQuery} from "react-query";
+import axios from "axios";
+import {useEffect, useState} from "react";
+import moment from "moment";
 
 const HomeDashboard = () => {
-  return (
-    // 1. Create a Grid Layout of cards
-    <Wrapper>
-        {/* <h1>HOST DASHBOARD</h1> */}
-        <UpperContainer>
-          <TempChart chartData={Live} />
-          <TempChart chartData={Live} />
-        </UpperContainer>
-        <LowerContainer>
-          <TempChart chartData={Live} />
-          <TempChart chartData={Live} />
-        </LowerContainer>
-        {/* <button onClick={() => {console.log(clusterId, hostId)}}> Click here</button> */}
-        {/* <RandomCard />
-        <RandomCard />
-        <RandomCard />
-        <RandomCard /> */}
-    </Wrapper>
+    const [content, setData] = useState([])
+
+    useEffect(() => {
+        async function fetchData() {
+            const response = await axios('http://localhost:8000')
+            setData(response.data)
+
+        }
+        fetchData()
+        setInterval(fetchData, 5000)
+    },[])
+
+    return (
+      <React.Fragment>
+          <Toolbar />
+            <Grid sx={{ mt: 8, width: '100%', p: 2 }} container spacing={2}>
+                {
+                    content && content.map(e => {
+                        const formatted = e.data.map(entry => {
+                            const timestamp = moment(entry.timestamp).format('HH:mm')
+                            return {
+                                ...entry,
+                                timestamp
+                            }
+                        })
+
+                        return (
+                        <Grid key={e.clusterId} item xs={6}>
+                          <Link to={`/cluster/${e.clusterId}`}>
+                               <Paper sx={{ height: '100%', pt: 1 }}>
+                              <h2 style={{ marginLeft: '45px'}} >{e.clusterId}</h2>
+                              <LineChart width={500} height={300} data={formatted}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="timestamp" />
+                                <YAxis />
+                                <Line type="monotone" dataKey="powerUsage" stroke='#8884d8' />
+                            </LineChart>
+                          </Paper>
+                          </Link>
+                      </Grid>
+                        )
+                    })
+                }
+        </Grid>
+      </React.Fragment>
   )
 }
 
-// const CustomLink = styled.Link`
-//   display: flex;
-// `
-
-const Row = styled.div`
-  display: flex;
-`
-
-const Wrapper = styled.div`
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    padding: 3rem;
-    background-color: #f7f8fa;
-    margin-top: 30px;
-`
-
-const UpperContainer = styled.div`
-  display: flex;
-  width: 100%;
-  height: 300px;
-  align-items: center;
-  justify-content: space-between;
-`
-
-const LowerContainer = styled.div`
-  display: flex;
-  width: 100%;
-  height: 50%;
-  padding: 16px 0px;
-  justify-content: space-between;
-`
-
-const InnerGrid = styled.div`
-  display: flex;
-  flex-direction: column;
-`
 export default HomeDashboard
