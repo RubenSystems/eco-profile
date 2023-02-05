@@ -257,11 +257,3 @@ async def postMetrics(metric: Metric):
     return {"insertedId": str(result.inserted_id)}
 
 
-class future_predict_schema(BaseModel):
-    username: str
-    clusterId: str
-    hostId: str
-
-@app.get("/ml/predict_future")
-async def predict_future()
-
