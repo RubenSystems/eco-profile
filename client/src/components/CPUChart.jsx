@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import moment from "moment";
-const CPUChart = ({chartData}) => {
+const CPUChart = ({chartData, what}) => {
     console.log("CPU CHART", chartData)
   return (
     <Wrapper>
@@ -14,7 +14,7 @@ const CPUChart = ({chartData}) => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="timestamp" />
                 <YAxis />
-                <Line type="monotone" dataKey="powerUsage" stroke='#8884d8' />
+                <Line type="monotone" dataKey={what} stroke='#8884d8' />
             </LineChart>
         </ResponsiveContainer>
     </Wrapper>
