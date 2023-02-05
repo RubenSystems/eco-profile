@@ -9,28 +9,71 @@ import CPULoadCard from '../components/CPULoadCard'
 import TotalEnergy from '../components/TotalEnergy'
 import CPUChart from '../components/CPUChart'
 import Live from "../data/live.json"
+import { useQuery } from 'react-query'
+import axios from 'axios'
+import moment from 'moment'
+
+
 const HostDashboard = () => {
 
+  const data = {
+    uptime: 25,
+    hostname: "Prestance",
+    cpuLoad: 160.5,
+    esgRating: 99,
+    totalEnergy: 3000
+  }
+
+  const [liveData, setLiveData] = React.useState([])
+  React.useEffect(() => {
+    setLiveData(Live)
+  },[])
+  // const getStaticData = async () => {
+  //   const response = await axios.get(`http://localhost:8000/cluster/${clusterId}/host/${hostId}`)
+  //   return response.data
+  // }
+
+  // const { data } = useQuery(["static"], getStaticData)
+
+  // const getLiveData = async () => {
+  //   const response = await axios.get(`http://localhost:8000/cluster/${clusterId}/host/${hostId}/live`)
+  //   const arr = response.data;
+
+  //   arr.map(x => {
+  //     return {
+
+  //     }
+  //   }
+  // }
+
+  // const { data: liveData } = useQuery(["live"], getLiveData, {refetchInterval: 1000})
     const {hostId, clusterId} = useParams()
   return (
     <Wrapper>
         {/* <h1>HOST DASHBOARD</h1> */}
         <UpperContainer>
-        <ESGCard />
+        <ESGCard esgRating={data.esgRating} hostId={hostId} clusterId={clusterId} />
           <InnerGrid>
             <Row>
-            <HostName />
-            <HostUptime />
+            <HostName hostname={data.hostname}/>
+            <HostUptime uptime={data.uptime}/>
             </Row>
             <Row>
-            <TotalEnergy />
-            <CPULoadCard />
+            <TotalEnergy totalEnergy={data.totalEnergy}/>
+            <CPULoadCard cpuLoad={data.cpuLoad}/>
             </Row>
           </InnerGrid>
         </UpperContainer>
         <LowerContainer>
-          <CPUChart chartData={Live}/>
-          <CPUChart chartData={Live}/>
+          <CPUChart chartData={liveData}/>
+          <CPUChart chartData={liveData}/>
+          {/* <button onClick={() => setLiveData(liveData.concat({
+   
+    timestamp: "2023-02-04T21:19:00",
+    powerUsage: 90.12,
+  }))}></button>
+  <button onClick={() => console.log(liveData)}> debug </button> */}
+          {/* <CPUChart chartData={Live}/> */}
         </LowerContainer>
         {/* <button onClick={() => {console.log(clusterId, hostId)}}> Click here</button> */}
         {/* <RandomCard />

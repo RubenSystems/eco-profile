@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-const CPULoadCard = () => {
+const CPULoadCard = ({ cpuLoad }) => {
   return (
     <Wrapper>
         <h4>Current Cpu load</h4>
-        <h2>Some cool driver stuff</h2>
+        <h2>{cpuLoad}</h2>
     </Wrapper>
   )
 }

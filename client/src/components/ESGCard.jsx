@@ -1,11 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const ESGCard = () => {
+const ESGCard = ({esgRating, hostId, clusterId}) => {
   return (
     <Wrapper>
+        <h3>Host: {clusterId}:{hostId}</h3>
+        <div className="divider"></div>
         <h3>ESG Rating</h3>
-        <h1>99</h1>
+        <h1>{esgRating}</h1>
     </Wrapper>
   )
 }
@@ -21,6 +23,12 @@ const Wrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     font-family: sans-serif;
+
+    .divider {
+        height: 1px;
+        width: 100%;
+        background-color: rgba(0,0,0,0.3);
+    }
 
     h3 {
         color: rgba(0,0,0,0.5);
