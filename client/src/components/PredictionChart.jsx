@@ -1,9 +1,10 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import styled from 'styled-components'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import moment from "moment";
 const PredictionChart = ({chartData, what}) => {
-
+    const [a, setA] = useState([])
+    const [b, setB] = useState([])
 
     const processData = (arr) => {
         const data1 = arr.filter((x) => x.predicted)
@@ -12,17 +13,26 @@ const PredictionChart = ({chartData, what}) => {
     }
 
 
+    useEffect(() => {
+        const [c, d] = processData(chartData)
+        setA(c)
+        setB(d)
+    }, [])
+
+    const processedData = processData(chartData)
+    console.log("HOIASHDIohSAIODH", processedData)
+
   return (
     <Wrapper>
         <ResponsiveContainer width="100%" height="100%">
         <LineChart width={500} height={300}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="timestamp" type="timestamp" allowDuplicatedCategory={false} />
-          <YAxis dataKey="value" />
+          <XAxis dataKey="timestamp" allowDuplicatedCategory={false} />
+          <YAxis dataKey="powerUsage" />
           <Tooltip />
           <Legend />
-          <Line dataKey="value" data={processedData[0]} name="prediction" stroke='red' />
-          <Line dataKey="value" data={processedData[1]} name="data"  stroke='blue'/>
+            <Line type={'monotone'} dataKey="powerUsage" data={b} name="data"  stroke='blue'/>
+          <Line type={'monotone'} dataKey="powerUsage" data={a} name="prediction" stroke='red' />
         </LineChart>
       </ResponsiveContainer>
     </Wrapper>

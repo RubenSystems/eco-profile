@@ -12,6 +12,8 @@ import Live from "../data/live.json"
 import { useQuery } from 'react-query'
 import axios from 'axios'
 import moment from 'moment'
+import PredictionChart from "../components/PredictionChart.jsx";
+import Cock from '../data/prediction.json'
 
 
 const HostDashboard = () => {
@@ -83,7 +85,7 @@ const HostDashboard = () => {
           </InnerGrid>
         </UpperContainer>
         <LowerContainer>
-          <CPUChart chartData={liveData} what={`powerUsage`}/>
+          <PredictionChart chartData={Cock} what={`powerUsage`}/>
           <CPUChart chartData={liveData} what={`cpuLoad`}/>
           {/* <button onClick={() => setLiveData(liveData.concat({
    
