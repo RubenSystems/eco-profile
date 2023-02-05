@@ -279,8 +279,8 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
         db_data = padding
 
 
-    print(len(db_data))
     if len(db_data) > 200:
+
         tsm1 = parser.parse(result[-1]["timestamp"])
         time_delta = tsm1 - parser.parse(result[-2]["timestamp"])
 
@@ -302,10 +302,9 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
             base_timestamp += time_delta
         
     
-
+        print(augmented_data)
         db_data += augmented_data
 
-    db_data = list(map(transform, result))
 
     return db_data
 
@@ -382,13 +381,6 @@ async def postMetrics(metric: Metric):
     if result:
         updateData = {
             '$set': {
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
-                # TODO: - ASK WHY ADD!!!!!
-=======
->>>>>>> Stashed changes
->>>>>>> c3fe3e9b77efc160b9f483a492f915057cca1e3b
                 # 'powerUsage': result['powerUsage'] + metric.powerUsage,
                 # 'cpuLoad': result['cpuLoad'] + metric.cpuLoad
                 'powerUsage': metric.powerUsage,
