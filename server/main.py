@@ -2,15 +2,15 @@ from datetime import datetime, timedelta
 from typing import Union
 
 import pymongo
+from dateutil.parser import parser
 from fastapi import FastAPI, Header
 from pydantic import BaseModel
 import motor.motor_asyncio
 from fastapi.middleware.cors import CORSMiddleware
 
-from machine_learning import model_loader
-
-
-import numpy as np
+# from machine_learning import model_loader
+#
+# import numpy as np
 
 class Metric(BaseModel):
     timestamp: str
@@ -49,9 +49,9 @@ def transform(e):
     return e
 
 
-loader = model_loader()
-anomaly = loader.load("models/anomaly/my_model")
-predict = loader.load("models/predict/my_model")
+# loader = model_loader()
+# anomaly = loader.load("models/anomaly/my_model")
+# predict = loader.load("models/predict/my_model")
 
 
 @app.get("/")
@@ -103,7 +103,7 @@ async def root(username: Union[str, None] = Header(default=None)):
 
     result = await metricsCollection.aggregate(pipeline).to_list(length=None)
 
-    print(result)
+    # print(result)
 
     for cluster_idx in range(len(result)):
         m = dict()
@@ -132,7 +132,7 @@ async def getClusters(clusterId: str, username: Union[str, None] = Header(defaul
     pipeline = [
         {
             "$match": {
-                "username": username or "ai start up",
+                "username": username or "scale ai",
                 "clusterId": clusterId,
                 "timestamp": {
                     "$gt": ago.isoformat()
@@ -147,6 +147,11 @@ async def getClusters(clusterId: str, username: Union[str, None] = Header(defaul
         {
             "$group": {
                 "_id": "$hostId",
+                "clusterIds": {
+                    "$push": {
+                        "clusterId": "$clusterId"
+                    }
+                },
                 "data": {
                     "$push": {
                         "timestamp": "$timestamp",
@@ -160,7 +165,13 @@ async def getClusters(clusterId: str, username: Union[str, None] = Header(defaul
             "$project": {
                 "_id": 0,
                 "hostId": "$_id",
-                "data": 1
+                "data": 1,
+                "clusterIds": 1
+            }
+        },
+        {
+            "$sort": {
+                "hostId": 1
             }
         }
     ]
@@ -174,7 +185,7 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
     pipeline = [
         {
             "$match": {
-                "username": username or "ai start up",
+                "username": username or "scale ai",
                 "clusterId": clusterId,
                 "hostId": hostId
             }
@@ -197,7 +208,7 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
     pipeline = [
         {
             "$match": {
-                "username": username or "ai start up",
+                "username": username or "scale ai",
                 "clusterId": clusterId,
                 "hostId": hostId
             }
@@ -214,7 +225,7 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
 
     result = await metricsCollection.aggregate(pipeline).to_list(length=None)
 
-    print(result)
+    # print(result)
 
     return {
         "activeSince": activeSince,
@@ -227,9 +238,6 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
 
 @app.get("/cluster/{clusterId}/host/{hostId}/live")
 async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Header(default=None)):
-
-
-
     now = datetime.now()
     now.replace(tzinfo=None)
     ago = now - timedelta(minutes=30)
@@ -237,7 +245,7 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
     pipeline = [
         {
             "$match": {
-                "username": username or "ai start up",
+                "username": username or "scale ali",
                 "clusterId": clusterId,
                 "hostId": hostId,
                 "timestamp": {
@@ -252,42 +260,34 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
         }
     ]
 
-
-
-
-
-
     result = await metricsCollection.aggregate(pipeline).to_list(length=None)
-    print(result)
+    # print(result)
 
-    tsm1 = parser.parse(result[-1]["timestamp"])
-    time_delta = tsm1 - parser.parse(result[-2]["timestamp"])
+    # tsm1 = parser.parse(result[-1]["timestamp"])
+    # time_delta = tsm1 - parser.parse(result[-2]["timestamp"])
 
-
-    data = np.array([x["powerUsage"] for x in result])
-    predictions = predict.predict((np.array([x * 1000.0 for x in data[:200]])).reshape(1, 200, 1))
-    augmented_data = []
-    base_timestamp = tsm1
-    for prediction in predictions[0]: 
-
-        augmented_data.append({
-            "_id":str(result[-1]["_id"]),
-            "timestamp":base_timestamp.isoformat(),
-            "username":result[-1]["username"],
-            "clusterId":result[-1]["clusterId"],
-            "hostId":result[-1]["hostId"],
-            "powerUsage": round(float(prediction) / 1000.0, 3),
-            "predicted":True
-        })
-
-        base_timestamp += time_delta
+    # data = np.array([x["powerUsage"] for x in result])
+    # predictions = predict.predict((np.array([x * 1000.0 for x in data[:200]])).reshape(1, 200, 1))
+    # augmented_data = []
+    # base_timestamp = tsm1
+    # for prediction in predictions[0]:
+    #     augmented_data.append({
+    #         "_id":str(result[-1]["_id"]),
+    #         "timestamp":base_timestamp.isoformat(),
+    #         "username":result[-1]["username"],
+    #         "clusterId":result[-1]["clusterId"],
+    #         "hostId":result[-1]["hostId"],
+    #         "powerUsage": round(float(prediction) / 1000.0, 3),
+    #         "predicted":True
+    #     })
+    #
+    #     base_timestamp += time_delta
         
     db_data = list(map(transform, result))
 
-    db_data += augmented_data
+    # db_data += augmented_data
 
     return db_data
-
 
 
 @app.post("/metrics")
