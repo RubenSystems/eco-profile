@@ -186,6 +186,8 @@ async def getHost(clusterId: str, hostId: str, username: Union[str, None] = Head
 
     result = await metricsCollection.aggregate(pipeline).to_list(length=None)
 
+    print(result)
+
     return {
         "activeSince": activeSince,
         "currentCpuLoad": currentCpuLoad,
