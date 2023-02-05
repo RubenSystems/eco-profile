@@ -7,9 +7,12 @@ from pydantic import BaseModel
 import motor.motor_asyncio
 from dateutil import parser
 
+<<<<<<< HEAD
 from machine_learning import model_loader
 
 
+=======
+>>>>>>> b14568c4485dcd748bbdbf3be0e364ea212eaedf
 class Metric(BaseModel):
     timestamp: str
     username: str
@@ -21,6 +24,10 @@ class Metric(BaseModel):
 
 app = FastAPI()
 
+<<<<<<< HEAD
+=======
+# app.include_router(machine_learning_router, prefix="/ml_ops",)
+>>>>>>> b14568c4485dcd748bbdbf3be0e364ea212eaedf
 
 client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://localhost:27017')
 db = client['ecoprofiler']
