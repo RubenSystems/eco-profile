@@ -136,7 +136,7 @@ class model_loader:
 		if filename in self.model_cache:
 			return self.model_cache[filename]
 		model = tf.keras.models.load_model(filename)
-		model_cache[filename] = model
+		self.model_cache[filename] = model
 		return model
 
 
