@@ -1,30 +1,27 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import moment from "moment";
-const CPUChart = ({chartData, what}) => {
-    var chartData = chartData.filter(x => {
-        return !x.predicted
-    });
+const CPUChart = ({chartData, clusterId, hostId} ) => {
+    console.log("CPU CHART", chartData)
   return (
-    <Wrapper>
-        <ResponsiveContainer width="100%" height="100%">
-            <LineChart width={500} height={300} data={chartData.map(e => { return {
-                ...e,
-                timestamp: moment(e.timestamp).format('HH:mm')
-            }})}>
+    <Wrapper to={`host/${clusterId}/${hostId}`} >
+        {/* <ResponsiveContainer width="100%" height="100%"> */}
+            <h1 style={{textDecoration: 'none'}}>saidoasidj</h1>
+            <LineChart width={500} height={300} data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="timestamp" />
                 <YAxis />
-                <Line type="monotone" dataKey={what} stroke='#8884d8' />
+                <Line type="monotone" dataKey="powerUsage" stroke='#8884d8' />
             </LineChart>
-        </ResponsiveContainer>
+        {/* </ResponsiveContainer> */}
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled(Link)`
     background-color: white;
+    cursor: pointer;
     width: 48%;
     height: 100%;
     padding: 32px;
@@ -34,6 +31,7 @@ const Wrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     font-family: sans-serif;
+    margin-top: 50px;
 
     h3 {
         color: rgba(0,0,0,0.5);

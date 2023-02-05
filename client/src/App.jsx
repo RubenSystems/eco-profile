@@ -12,7 +12,6 @@ function App() {
         <Header/>
         <Routes>
         <Route index element={<HomeDashboard />}/>
-        
           <Route path="cluster">
             <Route path=":clusterId" element={<ClusterDashboard />}/>
           </Route>
@@ -20,7 +19,7 @@ function App() {
             <Route path=":clusterId/:hostId" element={<HostDashboard />}/>
           </Route>
           </Routes>
-          </Box>
+        </Box>
       </Router>
   )
 }

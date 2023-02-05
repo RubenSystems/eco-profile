@@ -1,35 +1,61 @@
-import React from 'react'
+import * as React from 'react'
 import axios from 'axios'
-import { useQuery } from 'react-query'
-import {useParams} from "react-router-dom"
-import styled from "styled-components"
+import {Link, useParams} from "react-router-dom"
+import {useEffect, useState} from "react";
+import Toolbar from "@mui/material/Toolbar";
+import {Grid, Paper} from "@mui/material";
+import moment from "moment";
+import {CartesianGrid, Line, LineChart, XAxis, YAxis} from "recharts";
+
 const ClusterDashboard = () => {
-  // const getData = async () => {
-  //   const response = await axios.get("")
-  //   return response.data
-  // }
+    const { clusterId } = useParams()
 
-  // const { data: topics, isLoading} = useQuery(["topics"], getData(), refetchInterval=1000)
+    const [content, setData] = useState([])
 
-  
+    useEffect(() => {
+        async function fetchData() {
+            const response = await axios(`http://localhost:8000/cluster/${clusterId}`)
+            setData(response.data)
+        }
 
-  const { clusterId } = useParams()
-  return (
-    <Wrapper>
-      <h1>Cluster Dashboard</h1>
-      <button onClick={() => console.log(clusterId)}> CLICK</button>
-    </Wrapper>
-  )
+        fetchData()
+        setInterval(fetchData, 5000)
+    },[])
+
+    return (
+    <React.Fragment>
+        <Toolbar />
+            <Grid sx={{ mt: 8, width: '100%', p: 2 }} container spacing={2}>
+                {
+                    content && content.map(e => {
+                        const formatted = e.data.map(entry => {
+                            const timestamp = moment(entry.timestamp).format('HH:mm')
+                            return {
+                                ...entry,
+                                timestamp
+                            }
+                        })
+
+                        return (
+                        <Grid key={e.clusterId} item xs={6}>
+                          <Link to={`/host/${e.clusterIds[0]['clusterId']}/${e.hostId}`}>
+                               <Paper sx={{ height: '100%', pt: 1 }}>
+                              <h2 style={{ marginLeft: '45px'}} >{e.hostId} (Host)</h2>
+                              <LineChart width={500} height={300} data={formatted}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="timestamp" />
+                                <YAxis />
+                                <Line type="monotone" dataKey="powerUsage" stroke='#8884d8' />
+                            </LineChart>
+                          </Paper>
+                          </Link>
+                      </Grid>
+                        )
+                    })
+                }
+        </Grid>
+    </React.Fragment>
+    )
 }
-
-
-const Wrapper = styled.div`
-    width: 100%;
-    height: 100vh;
-    margin-top: 3rem;
-    display: flex;
-    flex-wrap: wrap;
-    border: solid thin black;
-`
 
 export default ClusterDashboard

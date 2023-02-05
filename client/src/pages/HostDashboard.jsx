@@ -12,39 +12,57 @@ import Live from "../data/live.json"
 import { useQuery } from 'react-query'
 import axios from 'axios'
 import moment from 'moment'
+import PredictionChart from "../components/PredictionChart.jsx";
+import Cock from '../data/prediction.json'
 
 
 const HostDashboard = () => {
-
-  const data = {
-    uptime: 25,
-    hostname: "Prestance",
-    cpuLoad: 60.5,
-    esgRating: 99,
-    totalEnergy: 3000
-  }
-
+  // const data = {
+  //   uptime: 25,
+  //   hostname: "Prestance",
+  //   cpuLoad: 60.5,
+  //   esgRating: 99,
+  //   totalEnergy: 3000
+  // }
+  const [data, setData] = React.useState({})
   const [liveData, setLiveData] = React.useState([])
+
   React.useEffect(() => {
-    setLiveData(Live)
+    (async () => {
+       const response = await axios.get(`http://localhost:8000/cluster/${clusterId}/host/${hostId}/`)
+      setData(response.data)
+
+        setInterval(async () => {
+            const response = await axios.get(`http://localhost:8000/cluster/${clusterId}/host/${hostId}/live/`)
+            setLiveData(response.data)
+        }, 2000)
+    })()
   },[])
+
   // const getStaticData = async () => {
+  //   console.log(clusterId, hostId)
   //   const response = await axios.get(`http://localhost:8000/cluster/${clusterId}/host/${hostId}`)
   //   return response.data
   // }
 
   // const { data } = useQuery(["static"], getStaticData)
 
-  // const getLiveData = async () => {
-  //   const response = await axios.get(`http://localhost:8000/cluster/${clusterId}/host/${hostId}/live`)
-  //   const arr = response.data;
+  const getLiveData = async () => {
+    const response = await axios.get(`http://localhost:8000/cluster/${clusterId}/host/${hostId}/live`)
+    const arr = response.data;
 
-  //   arr.map(x => {
-  //     return {
+    arr.map(x => {
+      const formatted = x.map(entry => {
+            const timestamp = moment(entry.timestamp).format('HH:mm')
+            return {
+                ...entry,
+                timestamp
+            }
+        })
 
-  //     }
-  //   }
-  // }
+      return formatted
+  })
+  }
 
   // const { data: liveData } = useQuery(["live"], getLiveData, {refetchInterval: 1000})
     const {hostId, clusterId} = useParams()
@@ -52,21 +70,31 @@ const HostDashboard = () => {
     <Wrapper>
         {/* <h1>HOST DASHBOARD</h1> */}
         <UpperContainer>
-        <ESGCard esgRating={data.esgRating} hostId={hostId} clusterId={clusterId} />
+        <ESGCard esgRating={data.esgScore} hostId={hostId} clusterId={clusterId} />
           <InnerGrid>
             <Row>
-            <HostName hostname={data.hostname}/>
-            <HostUptime uptime={data.uptime}/>
+            <HostName hostname={hostId}/>
+            <HostUptime uptime={
+              `${Math.round(moment.duration(moment().diff(moment(data.activeSince))).asMinutes())} minutes`
+            }/>
             </Row>
             <Row>
-            <TotalEnergy totalEnergy={data.totalEnergy}/>
-            <CPULoadCard cpuLoad={data.cpuLoad}/>
+            <TotalEnergy totalEnergy={Math.round(data.totalPowerUsage)}/>
+            <CPULoadCard cpuLoad={data.currentCpuLoad}/>
             </Row>
           </InnerGrid>
         </UpperContainer>
         <LowerContainer>
-          <CPUChart chartData={liveData}/>
-          <CPUChart chartData={liveData}/>
+{/*          <PredictionChart a ={ {
+        const data1 = arr.filter((x) => x.predicted)
+        const data2 = arr.filter((x) => !x.predicted)
+        return [data1, data2]
+    } } what={`powerUsage`}/>*/}
+
+                  <PredictionChart a ={ liveData.filter((x) => x.predicted) } 
+                    b ={  liveData.filter((x) => !x.predicted) } what={`powerUsage`}/>
+
+          <CPUChart chartData={liveData} what={`cpuLoad`}/>
           {/* <button onClick={() => setLiveData(liveData.concat({
    
     timestamp: "2023-02-04T21:19:00",
