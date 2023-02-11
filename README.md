@@ -1,6 +1,6 @@
 ![ecoprofile](https://user-images.githubusercontent.com/37454706/216800766-06749170-57b7-490f-b043-808531dd3836.png)
 
-# ICHack23 winner!
+# ICHack23 winner
 
 **Inspiration** 
 
